@@ -4,10 +4,11 @@ from DQNAgent import DQNAgent
 import random
 import numpy as np
 import torch
+from DQN import DQN
 
 class ReinforcedTablicPlayer(TablicPlayer):
-    def __init__(self, gamma):
-        self.agent = DQNAgent(gamma)
+    def __init__(self, gamma, isZeroSum = False, dqnClass=DQN):
+        self.agent = DQNAgent(gamma, isZeroSum, dqnClass=dqnClass)
     
     def load_model(self, model_path):
         self.agent = torch.load(model_path)
@@ -37,8 +38,16 @@ class ReinforcedTablicPlayer(TablicPlayer):
         best_take_ind = torch.argmax(takes_value)
         return takes[best_take_ind]
 
+    def find_best_play_from_state_actions_noisy(self, takes, state_actions):
+        with torch.no_grad():
+            takes_value = self.agent.forward(state_actions)
+        noisy_takes_values = takes_value + torch.normal(mean=torch.zeros([len(takes_value), 1]), std=1)
+        best_take_ind = torch.argmax(noisy_takes_values)
+        return takes[best_take_ind]
+
     def get_random_play_from_state_actions(self, valid_takes, valid_state_actions):
         return random.choice(valid_takes)
+
 
     def find_best_play(self, game):
         return self.find_best_play_from_state_actions(

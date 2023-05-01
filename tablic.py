@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from itertools import chain, combinations
+from copy import deepcopy
 
 
 class Tablic:
@@ -117,6 +118,9 @@ class Tablic:
     def rewards(self):
         return self._rewards.copy()
 
+    def copy(self):
+        return deepcopy(self)
+
     def get_taken(self, player):
         return self._taken[player].copy()
     
@@ -209,9 +213,9 @@ class Tablic:
         self._update_game_state()
 
     def print_state(self):
-        print(f"Player 0: {self._hands[0]}, {self._observation_hands[0]}")
-        print(f"Player 1: {self._hands[1]}, {self._observation_hands[1]}")
-        print(f"Table: {self._table}, {self._observation_table}")
-        print()
-        print(f"Player 0 taken: {sorted(self._taken[0])}, {self._observation_taken[0]}")
-        print(f"Player 1 taken: {sorted(self._taken[1])}, {self._observation_taken[1]}")
+        print(f"Player 0: {self._hands[0]}")
+        print(f"Player 1: {self._hands[1]}")
+        print(f"Table: {self._table}")
+        #print()
+        #print(f"Player 0 taken: {sorted(self._taken[0])}, {self._observation_taken[0]}")
+        #print(f"Player 1 taken: {sorted(self._taken[1])}, {self._observation_taken[1]}")
